@@ -64,7 +64,7 @@ public class JwtTokenProvider {
     }
 
     public String getUsername(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+        return (token != null) ? Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject() : null;
     }
 
     public String resolveToken(HttpServletRequest req) {

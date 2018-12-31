@@ -10,4 +10,5 @@ public interface QueueItemService {
     Iterable<QueueItem> findAll();
     QueueItem save(QueueItem queueItem);
     QueueItem delete(QueueItem queueItem);
+    QueueItem findByQueueAndItemId(Queue queue, Long id);
 }

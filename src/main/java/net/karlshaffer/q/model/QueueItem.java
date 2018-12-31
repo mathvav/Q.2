@@ -24,8 +24,6 @@ public class QueueItem {
     @JsonIgnore
     private Queue queue;
 
-    private boolean complete;
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User servicer;

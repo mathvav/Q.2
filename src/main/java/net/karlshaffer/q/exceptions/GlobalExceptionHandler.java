@@ -43,6 +43,11 @@ public class GlobalExceptionHandler {
         res.sendError(HttpStatus.FORBIDDEN.value(), "Access denied");
     }
 
+    @ExceptionHandler(org.springframework.http.converter.HttpMessageNotReadableException.class)
+    public void handleMessageUnreadableException(HttpServletResponse res) throws IOException {
+        res.sendError(HttpStatus.UNPROCESSABLE_ENTITY.value(), "Bad request");
+    }
+
     @ExceptionHandler(Exception.class)
     public void handleException(HttpServletResponse res, Exception ex) throws IOException {
         ex.printStackTrace();

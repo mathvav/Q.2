@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface QueueItemRepository extends CrudRepository<QueueItem, Long> {
     Iterable<QueueItem> findAllByServicer(User servicer);
     Iterable<QueueItem> findAllByQueue(Queue queue);
+    boolean existsByQueueAndAndId(Queue queue, Long id);
 }

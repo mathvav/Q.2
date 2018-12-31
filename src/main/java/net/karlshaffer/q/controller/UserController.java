@@ -63,11 +63,18 @@ public class UserController extends ApiController {
         return user;
     }
 
-    @DeleteMapping(USERS_RESOURCE_PATH)
+    @DeleteMapping(USERS_RESOURCE_PATH + "/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public User deleteUser(@RequestBody User user) {
+    public ResponseEntity<User> deleteUser(@PathVariable Long userId) {
+        User user = userService.findById(userId);
+
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
         userService.delete(user);
-        return user;
+
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
 }
