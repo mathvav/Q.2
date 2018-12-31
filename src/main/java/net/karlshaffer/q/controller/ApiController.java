@@ -1,9 +1,12 @@
 package net.karlshaffer.q.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/api")
+@RequestMapping(path = "/api")
 public class ApiController {
-    // Empty. This class simply exists to handle the base mapping for all API requests.
+    /*
+     * Empty controller class for handling the base API path. I have searched throughout the ends of the earth for a
+     * better way to do it, but alas the internet and Stack Overflow have failed me. Woe is me for trying to serve a
+     * React app through the monstrosity that is a Spring Boot JAR.
+     */
 }

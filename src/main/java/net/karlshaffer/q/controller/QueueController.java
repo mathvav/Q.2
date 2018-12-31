@@ -1,8 +1,8 @@
 package net.karlshaffer.q.controller;
 
 import net.karlshaffer.q.model.Queue;
+import net.karlshaffer.q.model.QueueItem;
 import net.karlshaffer.q.model.User;
-import net.karlshaffer.q.model.dto.QueueItemDto;
 import net.karlshaffer.q.service.QueueService;
 import net.karlshaffer.q.service.UserService;
 import net.karlshaffer.q.utility.RandomUtility;
@@ -18,6 +18,8 @@ import java.util.Calendar;
 @RestController
 public class QueueController extends ApiController {
 
+    public static final String QUEUE_RESOURCE_PATH = "/queue";
+
     private UserService userService;
     private QueueService queueService;
 
@@ -27,7 +29,7 @@ public class QueueController extends ApiController {
         this.queueService = queueService;
     }
 
-    @GetMapping("/queue")
+    @GetMapping(QUEUE_RESOURCE_PATH)
     public Queue newQueue(HttpServletRequest request) {
         String queueCode = RandomUtility.generateRandomAlphabeticString(Queue.DEFAULT_QUEUE_ID_LENGTH);
 
@@ -44,7 +46,7 @@ public class QueueController extends ApiController {
         return newQueue;
     }
 
-    @GetMapping("/queue/{queueCode}")
+    @GetMapping(QUEUE_RESOURCE_PATH + "/{queueCode}")
     public ResponseEntity<Queue> getQueue(@PathVariable String queueCode) {
         Queue queue = queueService.findByQueueCode(queueCode);
 
@@ -55,8 +57,8 @@ public class QueueController extends ApiController {
         return new ResponseEntity<>(queue, HttpStatus.OK);
     }
 
-    @PostMapping("/queue/{queueCode}/items")
-    public ResponseEntity addQueueItem(@PathVariable String queueCode, @RequestBody QueueItemDto newItem) {
+    @PostMapping(QUEUE_RESOURCE_PATH + "/{queueCode}/items")
+    public ResponseEntity addQueueItem(@PathVariable String queueCode, @RequestBody QueueItem newItem) {
         return null;
     }
 
