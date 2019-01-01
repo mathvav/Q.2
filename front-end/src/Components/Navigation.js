@@ -16,6 +16,7 @@ import LoginForm from './LoginForm';
 import '../Styles/LoginForm.css';
 import { UserConsumer } from '../Context/UserContext';
 import UserDropdown from './UserDropdown';
+import { ErrorConsumer } from '../Context/ErrorContext';
 
 export default class Navigation extends React.Component {
 
@@ -29,22 +30,22 @@ export default class Navigation extends React.Component {
         }));
     }
 
-    getUsername = () => {
-        if (this.props.user) {
-            return this.props.user.sub; 
+    getUsername = (userContext) => {
+        if (userContext.user) {
+            return userContext.user.sub; 
         } else {
             return "Login"; 
         }
     }
 
-    renderLoginPaneContents = (context) => {
-        if (this.props.user) {
+    renderLoginPaneContents = (userContext, errorContext) => {
+        if (userContext.user) {
             return(
-            <UserDropdown user={context.user} handleUserLogout={this.props.handleUserLogout} />
+            <UserDropdown user={userContext.user} handleUserLogout={this.props.handleUserLogout} />
             ); 
         } else {
             return(
-                <LoginForm handleUserLogin={this.props.handleUserLogin} loginError={context.errors.loginError}/>
+                <LoginForm handleUserLogin={this.props.handleUserLogin} loginError={errorContext.loginError}/>
             );
         }
     }
@@ -67,12 +68,23 @@ export default class Navigation extends React.Component {
                         <Nav className="ml-auto" navbar>
                             <UncontrolledDropdown nav inNavbar>
                                 <DropdownToggle nav caret>
-                                    {this.getUsername()}
+                                    <UserConsumer>
+                                        { userContext => 
+                                            this.getUsername(userContext)
+                                        }
+                                    </UserConsumer>
                                 </DropdownToggle>
                                 <DropdownMenu right>
                                     <UserConsumer>
-                                    { context => 
-                                       this.renderLoginPaneContents(context)
+                                    { userContext => (
+                                        <ErrorConsumer>
+                                            {
+                                                errorContext => (
+                                                    this.renderLoginPaneContents(userContext, errorContext)
+                                                )
+                                            }
+                                        </ErrorConsumer>   
+                                    )
                                     }
                                     </UserConsumer>
                                 </DropdownMenu>

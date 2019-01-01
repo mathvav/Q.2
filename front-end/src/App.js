@@ -2,17 +2,20 @@ import React, { Component } from 'react';
 import Navigation from './Components/Navigation';
 import { UserProvider } from './Context/UserContext';
 import './App.css';
-import * as jwt_decode from 'jwt-decode'; 
+import * as jwt_decode from 'jwt-decode';
+import { BrowserRouter, Route } from 'react-router-dom';
+import Home from './Components/Home'
+import { ErrorProvider } from './Context/ErrorContext';
 
 class App extends Component {
 
   checkForErrors = (response) => {
 
     if (!response.ok) {
-      throw new Error('Invalid Username or Password'); 
-    } 
+      throw new Error('Invalid Username or Password');
+    }
 
-    return response; 
+    return response;
   }
 
   handleUserLogin = (username, password) => {
@@ -21,18 +24,20 @@ class App extends Component {
       .then(this.checkForErrors)
       .then((response) => response.json())
       .then((json) => {
-        let user = jwt_decode(json.token); 
-        this.loginSuccess(user, json.token); 
+        let user = jwt_decode(json.token);
+        this.loginSuccess(user, json.token);
       })
       .catch((error) => {
-        this.loginError(); 
-      }); 
+        this.loginError();
+      });
   }
 
   handleUserLogout = () => {
     this.setState((state) => ({
-      user: null, 
-      token: null 
+      user: {
+        user:null, 
+        token:null
+      }
     }));
   }
 
@@ -40,47 +45,58 @@ class App extends Component {
     this.setState((state) => {
 
       // Clear out login error if it is flagged. 
-      let errors = state.errors; 
-      errors['loginError'] = false; 
+      let errors = state.errors;
+      errors['loginError'] = false;
 
-      return({
-        errors: errors, 
-        user: user, 
-        token: token 
-      }); 
+      return ({
+        errors: errors,
+        user: {
+          user: user, 
+          token: token
+        }
+      });
 
-    }); 
+    });
   }
 
   loginError = () => {
     this.setState((state) => {
-      let errors = state.errors; 
+      let errors = state.errors;
 
-      errors['loginError'] = true; 
+      errors['loginError'] = true;
 
-      return {errors: errors}; 
+      return { errors: errors };
 
-    }); 
+    });
   }
 
   state = {
     token: null,
     errors: {
-      loginError: false, 
+      loginError: false,
+    }, 
+    user: {
+      user: null, 
+      token: null, 
     }
   }
 
   render() {
     return (
-      <div className="App">
-        <UserProvider value={this.state}>
-          <Navigation
-            handleUserLogin={this.handleUserLogin}
-            handleUserLogout={this.handleUserLogout}
-            user={this.state.user}
-          />
-        </UserProvider>
-      </div>
+      <BrowserRouter>
+        <div className="App">
+          <ErrorProvider value={this.state.errors}>
+          <UserProvider value={this.state.user}>
+            <Navigation
+              handleUserLogin={this.handleUserLogin}
+              handleUserLogout={this.handleUserLogout}
+              user={this.state.user}
+            />
+            <Route exact path="/" component={ Home }/>
+          </UserProvider>
+          </ErrorProvider>
+        </div>
+      </BrowserRouter>
     );
   }
 }
