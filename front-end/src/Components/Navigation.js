@@ -15,6 +15,7 @@ import {
 import LoginForm from './LoginForm';
 import '../Styles/LoginForm.css';
 import { UserConsumer } from '../Context/UserContext';
+import UserDropdown from './UserDropdown';
 
 export default class Navigation extends React.Component {
 
@@ -28,6 +29,26 @@ export default class Navigation extends React.Component {
         }));
     }
 
+    getUsername = () => {
+        if (this.props.user) {
+            return this.props.user.sub; 
+        } else {
+            return "Login"; 
+        }
+    }
+
+    renderLoginPaneContents = (context) => {
+        if (this.props.user) {
+            return(
+            <UserDropdown user={context.user} handleUserLogout={this.props.handleUserLogout} />
+            ); 
+        } else {
+            return(
+                <LoginForm handleUserLogin={this.props.handleUserLogin} loginError={context.errors.loginError}/>
+            );
+        }
+    }
+
     render() {
         return (
             <div>
@@ -37,21 +58,21 @@ export default class Navigation extends React.Component {
                     <Collapse isOpen={this.state.isOpen} navbar>
                         <Nav navbar>
                             <NavItem>
-                                <NavLink href="/components/">Components</NavLink>
+                                <NavLink href="#">Create New Queue</NavLink>
                             </NavItem>
                             <NavItem>
-                                <NavLink href="https://github.com/reactstrap/reactstrap">GitHub</NavLink>
+                                <NavLink href="#">My Queues</NavLink>
                             </NavItem>
                         </Nav>
                         <Nav className="ml-auto" navbar>
                             <UncontrolledDropdown nav inNavbar>
                                 <DropdownToggle nav caret>
-                                    Login
+                                    {this.getUsername()}
                                 </DropdownToggle>
                                 <DropdownMenu right>
                                     <UserConsumer>
                                     { context => 
-                                        <LoginForm handleUserLogin={this.props.handleUserLogin} loginError={context.errors.loginError} />
+                                       this.renderLoginPaneContents(context)
                                     }
                                     </UserConsumer>
                                 </DropdownMenu>

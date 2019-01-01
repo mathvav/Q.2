@@ -1,9 +1,9 @@
-import React from 'react'; 
-import { Form, FormGroup, Input, Button, Alert  } from 'reactstrap'; 
+import React from 'react';
+import { Form, FormGroup, Input, Button, Alert } from 'reactstrap';
 
 export default class LoginForm extends React.Component {
 
-    username = React.createRef(); 
+    username = React.createRef();
     password = React.createRef();
 
     handleSubmit = (event) => {
@@ -17,23 +17,19 @@ export default class LoginForm extends React.Component {
 
     loginErrorAlert = () => {
         if (this.props.loginError) {
-            return(
-                <Alert color="danger">
-                    Invalid username/password.
-                </Alert>
+            return (
+                <Alert color="danger" className="mx-2">Invalid Username or Password!</Alert>
             );
         } else {
-            return(null) 
+            return (null)
         }
     }
 
     render() {
-        return(
+        return (
             <div>
-                <Form className="px-4 pt-3" onSubmit={this.handleSubmit}>
-                    <FormGroup row>
-                    {this.loginErrorAlert()}
-                    </FormGroup>
+                {this.loginErrorAlert()}
+                <Form className="px-4" onSubmit={this.handleSubmit}>
                     <FormGroup row>
                         <Input type="username" name="email" id="email" placeholder="username" innerRef={this.username} />
                     </FormGroup>
