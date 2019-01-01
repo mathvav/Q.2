@@ -1,25 +1,61 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import Navigation from './Components/Navigation';
+import { UserProvider } from './Context/UserContext';
 import './App.css';
 
 class App extends Component {
+
+  checkForErrors = (response) => {
+
+    console.log('checking for errors...')
+
+    console.log(response.ok)
+    
+    if (!response.ok) {
+      console.log('error thrown!')
+      this.loginError(); 
+    } 
+
+    return response; 
+  }
+
+  handleUserLogin = (username, password) => {
+    fetch(`/api/login?username=${username}&password=${password}`,
+      { method: 'post' })
+      .then(this.checkForErrors).then(response => response.text()).then(text => console.log(text))
+      .catch(error => this.loginError()); 
+  }
+
+  loginSuccess = () => {
+    //TODO: Write me! 
+  }
+
+  loginError = () => {
+    this.setState((state) => {
+      let errors = state.errors; 
+
+      errors['loginError'] = true; 
+
+      return {errors: errors}; 
+
+    }); 
+  }
+
+  state = {
+    token: null,
+    errors: {
+      loginError: false, 
+    }
+  }
+
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <UserProvider value={this.state}>
+          <Navigation
+            handleUserLogin={this.handleUserLogin}
+          />
+        </UserProvider>
       </div>
     );
   }
